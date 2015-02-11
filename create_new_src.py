@@ -25,6 +25,7 @@ if __name__ == '__main__':
 
 C_TEMPLATE = \
 u"""#include <stdio.h>
+#include <string.h>
 
 
 int main()
