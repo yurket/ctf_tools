@@ -36,15 +36,31 @@ int main()
 
 """
 
+CPP_TEMPLATE = \
+u"""#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    cout << "cpp template" << endl;
+    return 0;
+}
+
+"""
+
+
+
 class COLORS:
     NOCOLOR = '\033[0m'
     RED = '\033[91m'
 
+#TODO: check if files already exist
 
 def main():
     DESCR = 'program creates ready-to-use template for average python script.'
     parser = argparse.ArgumentParser(description=DESCR)
-    parser.add_argument('src_type', type=str, help='source file type [python, c]')
+    parser.add_argument('src_type', type=str, help='source file type [python, c, cpp]')
     parser.add_argument('filename', type=str, help='filelame of new source file')
     args = parser.parse_args()
 
@@ -59,9 +75,16 @@ def main():
     elif src_type == 'c':
         name, ext = os.path.splitext(filename)
         if not ext:
-            filename += '.cc'
+            filename += '.c'
         with open(filename, 'wb') as f:
             f.write(C_TEMPLATE)
+    elif src_type == 'cpp':
+        name, ext = os.path.splitext(filename)
+        if not ext:
+            filename += '.cc'
+        with open(filename, 'wb') as f:
+            f.write(CPP_TEMPLATE)
+
     else:
         print("Error: Wrong %ssrc_type%s! Specify one of the supported: 'c' or 'python'" %
               (COLORS.RED, COLORS.NOCOLOR))
