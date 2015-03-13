@@ -82,21 +82,22 @@ def main():
     src_type = args.src_type.lower()
     force_replace = args.force
 
-    if src_type in _CORRESP_TABLE:
-        name, ext = os.path.splitext(filename)
-        if not ext:
-            filename += _CORRESP_TABLE[src_type]['ext']
-
-        if os.path.exists(filename) and not force_replace:
-            print("[!] File %s exists! Specify -f, --force option to replace it!"
-                  % filename)
-            return
-
-        with open(filename, 'wb') as f:
-            f.write(_CORRESP_TABLE[src_type]['template'])
-    else:
+    if src_type not in _CORRESP_TABLE:
         print("%sError: Wrong src_type! Specify one of the supported: %s" %
               (COLORS.RED, _CORRESP_TABLE.keys()))
+        return
+
+    name, ext = os.path.splitext(filename)
+    if not ext:
+        filename += _CORRESP_TABLE[src_type]['ext']
+
+    if os.path.exists(filename) and not force_replace:
+        print("[!] File %s exists! Specify -f, --force option to replace it!"
+              % filename)
+        return
+
+    with open(filename, 'wb') as f:
+        f.write(_CORRESP_TABLE[src_type]['template'])
 
 
 if __name__ == '__main__':
