@@ -58,7 +58,7 @@ _CORRESP_TABLE = {
 
 
 class COLORS:
-    """
+    r"""
         Uses color-set escape sequences:
         start coloring: \[\e[color\], end coloring: \[\e[m\].
     """
@@ -67,22 +67,31 @@ class COLORS:
     GREEN = '\033[1;32m'
     YELLOW = '\033[1;33m'
 
-#TODO: check if files already exist
+#TODO: Auto-guess template by file extension?
 
 def main():
-    DESCR = 'program creates ready-to-use template for average python script.'
+    DESCR = 'Program creates ready-to-use source file templates for some' \
+            'popular programming languages.'
     parser = argparse.ArgumentParser(description=DESCR)
     parser.add_argument('src_type', type=str, help='source file type [python, c, cpp]')
     parser.add_argument('filename', type=str, help='filelame of new source file')
+    parser.add_argument('-f', '--force', action='store_true',
+                        help='create file, even if another one exists with same name')
     args = parser.parse_args()
-
     filename = args.filename
     src_type = args.src_type.lower()
+    force_replace = args.force
 
     if src_type in _CORRESP_TABLE:
         name, ext = os.path.splitext(filename)
         if not ext:
             filename += _CORRESP_TABLE[src_type]['ext']
+
+        if os.path.exists(filename) and not force_replace:
+            print("[!] File %s exists! Specify -f, --force option to replace it!"
+                  % filename)
+            return
+
         with open(filename, 'wb') as f:
             f.write(_CORRESP_TABLE[src_type]['template'])
     else:
