@@ -49,6 +49,12 @@ int main()
 
 """
 
+# correspondance table {language: {template, extension}}
+_CORRESP_TABLE = {
+    "python": {'template': PYTHON_TEMPLATE, 'ext': '.py'}
+    , "c"   : {'template': C_TEMPLATE,      'ext': '.c'}
+    , "cpp" : {'template': CPP_TEMPLATE,    'ext': '.cc'}
+}
 
 
 class COLORS:
@@ -66,25 +72,13 @@ def main():
 
     filename = args.filename
     src_type = args.src_type.lower()
-    if src_type == 'python':
-        name, ext = os.path.splitext(filename)
-        if not ext:
-            filename += '.py'
-        with open(filename, 'wb') as f:
-            f.write(PYTHON_TEMPLATE)
-    elif src_type == 'c':
-        name, ext = os.path.splitext(filename)
-        if not ext:
-            filename += '.c'
-        with open(filename, 'wb') as f:
-            f.write(C_TEMPLATE)
-    elif src_type == 'cpp':
-        name, ext = os.path.splitext(filename)
-        if not ext:
-            filename += '.cc'
-        with open(filename, 'wb') as f:
-            f.write(CPP_TEMPLATE)
 
+    if src_type in _CORRESP_TABLE:
+        name, ext = os.path.splitext(filename)
+        if not ext:
+            filename += _CORRESP_TABLE[src_type]['ext']
+        with open(filename, 'wb') as f:
+            f.write(_CORRESP_TABLE[src_type]['template'])
     else:
         print("Error: Wrong %ssrc_type%s! Specify one of the supported: 'c' or 'python'" %
               (COLORS.RED, COLORS.NOCOLOR))
