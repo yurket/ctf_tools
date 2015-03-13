@@ -58,8 +58,14 @@ _CORRESP_TABLE = {
 
 
 class COLORS:
+    """
+        Uses color-set escape sequences:
+        start coloring: \[\e[color\], end coloring: \[\e[m\].
+    """
     NOCOLOR = '\033[0m'
-    RED = '\033[91m'
+    RED = '\033[1;31m'
+    GREEN = '\033[1;32m'
+    YELLOW = '\033[1;33m'
 
 #TODO: check if files already exist
 
@@ -80,8 +86,8 @@ def main():
         with open(filename, 'wb') as f:
             f.write(_CORRESP_TABLE[src_type]['template'])
     else:
-        print("Error: Wrong %ssrc_type%s! Specify one of the supported: 'c' or 'python'" %
-              (COLORS.RED, COLORS.NOCOLOR))
+        print("%sError: Wrong src_type! Specify one of the supported: %s" %
+              (COLORS.RED, _CORRESP_TABLE.keys()))
 
 
 if __name__ == '__main__':
