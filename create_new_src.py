@@ -27,6 +27,10 @@ C_TEMPLATE = \
 u"""#include <stdio.h>
 #include <string.h>
 
+#include <errno.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 
 int main()
 {
