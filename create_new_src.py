@@ -72,6 +72,7 @@ class COLORS:
     YELLOW = '\033[1;33m'
 
 #TODO: Auto-guess template by file extension?
+#TODO: Add simple makefiles for c, cpp templates
 
 def main():
     DESCR = 'Program creates ready-to-use source file templates for some' \
