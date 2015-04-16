@@ -47,7 +47,7 @@ def print_stats(data):
 
         if char == '\n':
             char = '\\n'
-        print("%s: %s" %(char, percent))
+        print("%s: %s (%d times)" %(char, percent, count))
     
 
 def main():
