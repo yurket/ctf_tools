@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import argparse
 import os
+import stat
 
 
 PYTHON_TEMPLATE = \
@@ -103,6 +104,11 @@ def main():
 
     with open(filename, 'wb') as f:
         f.write(_CORRESP_TABLE[src_type]['template'])
+
+    # make python sources executable
+    if src_type == 'python':
+        st = os.stat(filename)
+        os.chmod(filename, st.st_mode | stat.S_IEXEC)
 
 
 if __name__ == '__main__':
