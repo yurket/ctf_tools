@@ -10,7 +10,7 @@ import string
 
 from collections import Counter
 
-def print_stats(data):
+def print_letters_stats(data):
     if not data:
         print('Empty data')
         return None
@@ -47,6 +47,25 @@ def print_stats(data):
         if char == '\n':
             char = '\\n'
         print("{0}: {1:.2f}% ({2} times)".format(char, percent, count))
+    print(SEP)
+
+    return ctr.most_common()
+
+
+def print_words_stats(data):
+    print('\t\tWORDS DISTRIBUTION: \n')
+
+    words = data.split(' ')
+    if len(words) < 3:
+        print('[-] Too few words to count!')
+        return
+
+    most_common = Counter(words).most_common()
+    for word, count in most_common:
+        percent = (float(count)/len(words))*100
+        print("{0}: {1:.2f}%".format(word, percent))
+
+    return most_common
 
 
 def main():
@@ -67,8 +86,8 @@ def main():
         print(e.message)
         return
 
-    print_stats(data)
-
+    print_letters_stats(data)
+    print_words_stats(data)
 
 if __name__ == '__main__':
     main()
