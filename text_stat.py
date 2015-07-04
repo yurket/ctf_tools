@@ -43,12 +43,11 @@ def print_stats(data):
     print('\t\tLETTERS DISTRIBUTION: \n')
     for char, count in ctr.most_common():
         percent = (float(count)/data_len)*100
-        percent = str(round(percent, 3)) + '%'
 
         if char == '\n':
             char = '\\n'
-        print("%s: %s (%d times)" %(char, percent, count))
-    
+        print("{0}: {1:.2f}% ({2} times)".format(char, percent, count))
+
 
 def main():
     parser = argparse.ArgumentParser()
