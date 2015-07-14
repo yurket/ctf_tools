@@ -62,6 +62,7 @@ def print_words_stats(data):
         return
 
     most_common = Counter(words).most_common()
+    most_common = sorted(most_common, key=lambda x: len(x[0]))
     for word, count in most_common:
         percent = (float(count)/len(words))*100
         print("{0}: {1:.2f}% ({2} times)".format(word, percent, count))
