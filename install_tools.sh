@@ -2,5 +2,5 @@
 
 BINDIR=/usr/local/bin
 
-sudo cp create_new_src.py $BINDIR/create_new_src
-sudo cp text_stat.py $BINDIR/text_stat
+sudo cp -v create_new_src.py $BINDIR/create_new_src
+sudo cp -v text_stat.py $BINDIR/text_stat
