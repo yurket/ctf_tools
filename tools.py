@@ -22,7 +22,7 @@ def bytes_to_hex(b):
 def hex_to_bytes(s):
     return string_to_bytes(hex_to_string(s))
 
-
+# ================================================================================
 
 def xor_bytes(a, b):
     if len(a) != len(b):
@@ -37,6 +37,43 @@ def xor_strings(a, b):
 
 def xor_hexs(a, b):
     return bytexor(hex_to_bytes(a), hex_to_bytes(b))
+
+# ================================================================================
+
+from collections import Counter
+import string
+
+
+def is_printable_string(s):
+    for c in s:
+        if c not in string.printable:
+            return False
+    return True
+
+def is_printable_hex(h):
+    return is_printable_string(hex_to_string(h))
+
+
+def single_byte_xor_cipher_breaker(ct_hex):
+    """
+    *ct_hex* - a ciphertext, xored with 1 byte.
+    """
+
+    # ' ' E T A O I N    S H R D L U
+    MOST_COMMON_ENG = [0x20, 0x65, 0x74, 0x61, 0x6f, 0x69, 0x6e,
+                       0x73, 0x68, 0x72, 0x64, 0x6c, 0x75]
+
+    ct_bytes = hex_to_bytes(ct_hex)
+    most_common_byte = Counter(ct_bytes).most_common()[0][0]
+
+    for i, guess in enumerate(MOST_COMMON_ENG):
+        key_byte = most_common_byte ^ guess
+        pt_hex = xor_bytes(ct_bytes, [key_byte]*len(ct_bytes))
+        if not is_printable_hex(pt_hex):
+            continue
+        print("guess #%d('%c') is: %s" %
+              (i+1, chr(guess), hex_to_string(pt_hex)))
+
 
 
 def main():
