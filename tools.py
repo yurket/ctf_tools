@@ -33,10 +33,21 @@ def xor_bytes(a, b):
         return "".join([chr(x^y) for (x,y) in zip(a, b[:len(a)])]).encode('hex')
 
 def xor_strings(a, b):
-    return bytexor(string_to_bytes(a), string_to_bytes(b))
+    return xor_bytes(string_to_bytes(a), string_to_bytes(b))
 
 def xor_hexs(a, b):
-    return bytexor(hex_to_bytes(a), hex_to_bytes(b))
+    return xor_bytes(hex_to_bytes(a), hex_to_bytes(b))
+
+
+
+def repeating_xor_bytes(a, k):
+    return "".join([ chr(c^k[i%len(k)]) for i,c in enumerate(a) ])
+
+def repeating_xor_strings(a, k):
+    return repeating_xor_bytes(string_to_bytes(a), string_to_bytes(k))
+
+def repeating_xor_hexs(a, k):
+    return repeating_xor_bytes(hex_to_bytes(a), hex_to_bytes(k))
 
 # ================================================================================
 
