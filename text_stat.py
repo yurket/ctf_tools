@@ -38,12 +38,31 @@ def print_letters_stats(data):
     print('\n\t\t\tSTATISTICS:')
     print(g_SEP)
     print()
+
+    def replace_not_printable_with_hex(c):
+        if c not in string.printable:
+            return c.encode('hex')
+        if c == '\n':
+            return '\\n'
+        elif c == '\t':
+            return '\\t'
+        elif c == '\x0b':
+            return '\\b'
+        elif c == '\x0c':
+            return '\\c'
+        elif c == '\r':
+            return '\\r'
+        return c
+
     keys = sorted(ctr.keys())
-    printable_keys = (' '.join(keys)).replace('\n', '\\n')
-    print('Whole alphabet is: %s     (Lengh: %d)' % (printable_keys, len(keys)))
+
+    all_alphabet = map(replace_not_printable_with_hex, keys)
+    all_alphabet = (' '.join(all_alphabet))
+    print('All alphabet is: %s     (Lengh: %d)' % (all_alphabet, len(keys)))
     print(g_SEP)
 
     without_whitespaces = [k for k in keys if k not in string.whitespace]
+    without_whitespaces = map(replace_not_printable_with_hex, without_whitespaces)
     print('Without whitespaces: %s     (Lengh: %d)' %
           (' '.join(without_whitespaces), len(without_whitespaces)))
     print(g_SEP)
