@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import argparse
+import binascii
 import os
 import string
 
@@ -31,8 +32,11 @@ g_LETTER_FREQ_STAT = {
 
 
 def replace_not_printable_with_hex(c):
-    if c not in string.printable:
-        return c.encode('hex')
+    if str(c) not in string.printable:
+        print(type(c))
+        # return binascii.hexlify(c)
+        return '{:02x}'.format(c)
+        # return c.encode('hex')
     if c == '\n':
         return '\\n'
     elif c == '\t':
@@ -58,7 +62,15 @@ def print_letters_stats(data):
     print(g_SEP)
     print()
 
+    # in Python2 ctr.keys() returns the list of strings
+    # in Python3 ctr.keys() returns the list of ints
     keys = sorted(ctr.keys())
+
+    # if python
+    if issubclass(type(keys[0]), str):
+        keys = [ord(x) for x in keys]
+    # print(keys)
+    # print('1: %s' % type(keys[0]))
 
     all_alphabet = map(replace_not_printable_with_hex, keys)
     all_alphabet = (' '.join(all_alphabet))
