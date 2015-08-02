@@ -102,7 +102,7 @@ def main():
         return
 
     with open(filename, 'wb') as f:
-        f.write(_EXT_TO_TEMPLATE[ext])
+        f.write(_EXT_TO_TEMPLATE[ext].encode('utf-8'))
 
     # make python sources executable
     if ext == '.py':
