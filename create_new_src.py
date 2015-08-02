@@ -66,7 +66,7 @@ _EXT_TO_TEMPLATE = {
 
 
 class COLORS:
-    r"""
+    """
         Uses color-set escape sequences:
         start coloring: \[\e[color\], end coloring: \[\e[m\].
     """
@@ -74,6 +74,7 @@ class COLORS:
     RED = '\033[1;31m'
     GREEN = '\033[1;32m'
     YELLOW = '\033[1;33m'
+
 
 #TODO: Add simple makefiles for c, cpp templates
 #TODO: print_colored_error() or @colored
@@ -91,13 +92,13 @@ def main():
 
     name, ext = os.path.splitext(filename)
     if not ext:
-        print("%sError: Wrong extension! Specify one of the supported: %s" %
-              (COLORS.RED, _EXT_TO_TEMPLATE.keys()))
+        print("%sError: Wrong extension! Specify one of the supported: %s %s" %
+              (COLORS.RED, _EXT_TO_TEMPLATE.keys(), COLORS.NOCOLOR))
         return
 
     if os.path.exists(filename) and not force_replace:
-        print("[!] File %s exists! Specify -f, --force option to replace it!"
-              % filename)
+        print("%s[!] File %s exists! Specify -f, --force option to replace it!%s"
+              % (COLORS.YELLOW, filename, COLORS.NOCOLOR))
         return
 
     with open(filename, 'wb') as f:
