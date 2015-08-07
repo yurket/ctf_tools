@@ -10,6 +10,9 @@ import string
 
 from collections import Counter, OrderedDict
 
+# frequency statistics taken from here:
+# http://www.macfreek.nl/memory/Letter_Distribution
+
 g_SEP = '-'*100
 g_TOP_LETTERS  = 'E T A O I N S H R D L U'
 
