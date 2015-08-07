@@ -4,10 +4,9 @@
 from __future__ import print_function
 
 import argparse
-import binascii
 import os
 import string
-
+import sys        # for version_info
 
 from collections import Counter, OrderedDict
 
@@ -30,24 +29,23 @@ g_LETTER_FREQ_STAT = {
     , (2, True): 'Top doubles: ss ee tt ff ll mm oo \n'
 }
 
+def IS_PYTHON2():
+    return True if sys.version_info.major == 2 else False
 
-def replace_not_printable_with_hex(c):
-    if str(c) not in string.printable:
-        print(type(c))
-        # return binascii.hexlify(c)
-        return '{:02x}'.format(c)
-        # return c.encode('hex')
-    if c == '\n':
+def replace_not_printable_with_hex(ch):
+    if chr(ch) not in string.printable:
+        return '{:02x}'.format(ch)
+    if ch == ord('\n'):
         return '\\n'
-    elif c == '\t':
+    elif ch == ord('\t'):
         return '\\t'
-    elif c == '\x0b':
+    elif ch == ord('\x0b'):
         return '\\b'
-    elif c == '\x0c':
+    elif ch == ord('\x0c'):
         return '\\c'
-    elif c == '\r':
+    elif ch == ord('\r'):
         return '\\r'
-    return c
+    return chr(ch)
 
 
 def print_letters_stats(data):
@@ -64,21 +62,21 @@ def print_letters_stats(data):
 
     # in Python2 ctr.keys() returns the list of strings
     # in Python3 ctr.keys() returns the list of ints
-    keys = sorted(ctr.keys())
+    if IS_PYTHON2():
+        keys = sorted([ord(x) for x in ctr.keys()])
+        most_common = [ (ord(ch),count) for ch, count in ctr.most_common()]
+    else:
+        keys = sorted(ctr.keys())
+        most_common = ctr.most_common()
 
-    # if python
-    if issubclass(type(keys[0]), str):
-        keys = [ord(x) for x in keys]
-    # print(keys)
-    # print('1: %s' % type(keys[0]))
-
-    all_alphabet = map(replace_not_printable_with_hex, keys)
+    all_alphabet = [ replace_not_printable_with_hex(k) for k in  keys ]
     all_alphabet = (' '.join(all_alphabet))
     print('All alphabet is: %s     (Lengh: %d)' % (all_alphabet, len(keys)))
     print(g_SEP)
 
-    without_whitespaces = [k for k in keys if k not in string.whitespace]
-    without_whitespaces = map(replace_not_printable_with_hex, without_whitespaces)
+    without_whitespaces = [k for k in keys if chr(k) not in string.whitespace]
+    # without_whitespaces = map(replace_not_printable_with_hex, without_whitespaces)
+    without_whitespaces = [replace_not_printable_with_hex(c) for c in without_whitespaces]
     print('Without whitespaces: %s     (Lengh: %d)' %
           (' '.join(without_whitespaces), len(without_whitespaces)))
     print(g_SEP)
@@ -92,12 +90,12 @@ def print_letters_stats(data):
     print('\n\t\tLETTERS DISTRIBUTION: \n')
     print('Most frequent letters: ' + g_TOP_LETTERS + '\n')
 
-    for char, count in ctr.most_common()[:50]:
+    for char, count in most_common[:50]:
         percent = (float(count)/data_len)*100
 
         char = replace_not_printable_with_hex(char)
         print("{0}: {1:.2f}% ({2} times)".format(char, percent, count))
-    return ctr.most_common()
+    return most_common
 
 
 def print_words_stats(data):
@@ -105,7 +103,7 @@ def print_words_stats(data):
     print('\n\t\tWORDS STATISTICS: \n')
     print()
 
-    words = data.split(' ')
+    words = str(data).split(' ')
     if len(words) < 3:
         print('[-] Too few words to count!')
         return
@@ -141,7 +139,7 @@ def print_letters_stats2(data, letters_count, count_same_letters=False):
     print(g_LETTER_FREQ_STAT[(letters_count, count_same_letters)])
 
     letters_map = {}
-    for i in xrange(len(data)-letters_count+1):
+    for i in range(len(data)-letters_count+1):
         key = data[i:i+letters_count]
         if ' ' in key:
             continue
