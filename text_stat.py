@@ -27,6 +27,22 @@ g_LETTER_FREQ_STAT = {
 }
 
 
+def replace_not_printable_with_hex(c):
+    if c not in string.printable:
+        return c.encode('hex')
+    if c == '\n':
+        return '\\n'
+    elif c == '\t':
+        return '\\t'
+    elif c == '\x0b':
+        return '\\b'
+    elif c == '\x0c':
+        return '\\c'
+    elif c == '\r':
+        return '\\r'
+    return c
+
+
 def print_letters_stats(data):
     if not data:
         print('Empty data')
@@ -38,21 +54,6 @@ def print_letters_stats(data):
     print('\n\t\t\tSTATISTICS:')
     print(g_SEP)
     print()
-
-    def replace_not_printable_with_hex(c):
-        if c not in string.printable:
-            return c.encode('hex')
-        if c == '\n':
-            return '\\n'
-        elif c == '\t':
-            return '\\t'
-        elif c == '\x0b':
-            return '\\b'
-        elif c == '\x0c':
-            return '\\c'
-        elif c == '\r':
-            return '\\r'
-        return c
 
     keys = sorted(ctr.keys())
 
@@ -76,11 +77,10 @@ def print_letters_stats(data):
     print('\n\t\tLETTERS DISTRIBUTION: \n')
     print('Most frequent letters: ' + g_TOP_LETTERS + '\n')
 
-    for char, count in ctr.most_common():
+    for char, count in ctr.most_common()[:50]:
         percent = (float(count)/data_len)*100
 
-        if char == '\n':
-            char = '\\n'
+        char = replace_not_printable_with_hex(char)
         print("{0}: {1:.2f}% ({2} times)".format(char, percent, count))
     return ctr.most_common()
 
@@ -98,6 +98,9 @@ def print_words_stats(data):
     most_common = Counter(words).most_common()
     most_common = sorted(most_common, key=lambda x: len(x[0]))
     most_common = [ (k,v) for k,v in most_common if v > 1]
+    if not len(most_common):
+        print("Nothing to show about words")
+        return []
 
     prev_word_len = len(most_common[0])
     for word, count in most_common:
@@ -139,9 +142,11 @@ def print_letters_stats2(data, letters_count, count_same_letters=False):
     sorted_letters_map = OrderedDict(
         sorted(letters_map.items(), key=lambda x: x[1], reverse=True))
 
-    for k,v in sorted_letters_map.items()[:10]:
-        print(k,v)
+    for letters, count in sorted_letters_map.items()[:10]:
+        escaped_letters = ''.join(map(replace_not_printable_with_hex, letters))
+        print(escaped_letters, count)
 
+    return sorted_letters_map
 
 
 def main():
