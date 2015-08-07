@@ -55,6 +55,12 @@ int main()
 
 """
 
+BASH_TEMPLATE = \
+u"""#!/bin/bash
+
+echo template
+"""
+
 _EXT_TO_TEMPLATE = {
     '.py'   : PYTHON_TEMPLATE
     , '.c'  : C_TEMPLATE
@@ -62,6 +68,8 @@ _EXT_TO_TEMPLATE = {
     , '.cpp': CPP_TEMPLATE
     , '.cc' : CPP_TEMPLATE
     , '.cxx': CPP_TEMPLATE
+
+    , '.sh': BASH_TEMPLATE
 }
 
 
@@ -105,7 +113,7 @@ def main():
         f.write(_EXT_TO_TEMPLATE[ext].encode('utf-8'))
 
     # make python sources executable
-    if ext == '.py':
+    if ext == '.py' or ext == '.sh':
         st = os.stat(filename)
         os.chmod(filename, st.st_mode | stat.S_IEXEC)
 
