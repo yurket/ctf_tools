@@ -24,6 +24,22 @@ if __name__ == '__main__':
 
 """
 
+RUBY_TEMPLATE = \
+u"""#!/usr/bin/env ruby
+
+
+def main()
+  puts "ruby template"
+  return 0
+end
+
+
+if __FILE__ == $PROGRAM_NAME
+  exit main()
+end
+
+"""
+
 C_TEMPLATE = \
 u"""#include <stdio.h>
 #include <string.h>
@@ -63,6 +79,7 @@ echo template
 
 _EXT_TO_TEMPLATE = {
     '.py'   : PYTHON_TEMPLATE
+    , '.rb' : RUBY_TEMPLATE
     , '.c'  : C_TEMPLATE
 
     , '.cpp': CPP_TEMPLATE
@@ -99,7 +116,7 @@ def main():
     force_replace = args.force
 
     name, ext = os.path.splitext(filename)
-    if not ext:
+    if not ext or ext not in _EXT_TO_TEMPLATE.keys():
         print("%sError: Wrong extension! Specify one of the supported: %s %s" %
               (COLORS.RED, _EXT_TO_TEMPLATE.keys(), COLORS.NOCOLOR))
         return
@@ -113,7 +130,8 @@ def main():
         f.write(_EXT_TO_TEMPLATE[ext].encode('utf-8'))
 
     # make python sources executable
-    if ext == '.py' or ext == '.sh':
+    executable_scripts_extentions = ['.py', '.sh', '.rb']
+    if ext in executable_scripts_extentions:
         st = os.stat(filename)
         os.chmod(filename, st.st_mode | stat.S_IEXEC)
 
