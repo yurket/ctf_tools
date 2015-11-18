@@ -29,8 +29,8 @@ u"""#!/usr/bin/env ruby
 
 
 def main()
-  puts "ruby template"
-  return 0
+    puts "ruby template"
+    return 0
 end
 
 
@@ -59,13 +59,11 @@ int main()
 
 CPP_TEMPLATE = \
 u"""#include <iostream>
-
-using std::cout;
-using std::endl;
+#include <string>
 
 int main()
 {
-    cout << "cpp template" << endl;
+    std::cout << "cpp template" << std::endl;
     return 0;
 }
 
