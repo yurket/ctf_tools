@@ -16,13 +16,12 @@ from collections import Counter, OrderedDict
 g_SEP = '-'*100
 g_TOP_LETTERS  = 'E T A O I N S H R D L U'
 
-g_TOP_WORDS = {
-      0: ''
-    , 1: ''
-    , 2: 'of to in it is be as at so we he by or on do'
-    , 3: 'the and for are but not you all'
-    , 4: 'that with from this'
-    }
+g_TOP_WORDS = [
+      (1, 'a')
+    , (2, 'of to in it is be as at so we he by or on do')
+    , (3, 'the and for are but not you all')
+    , (4, 'that with from this')
+    ]
 
 g_LETTER_FREQ_STAT = {
     (2, False): 'Top digraphs: th er on an re he in ed nd ha at en es of \n'
@@ -109,21 +108,21 @@ def print_words_stats(data):
         return
 
     most_common = Counter(words).most_common()
+    # sort by words length
     most_common = sorted(most_common, key=lambda x: len(x[0]))
     most_common = [ (k,v) for k,v in most_common if v > 1]
     if not len(most_common):
         print("Nothing to show about words")
         return []
 
-    prev_word_len = len(most_common[0])
-    for word, count in most_common:
-        if len(word) != prev_word_len:
-            print('-'*50)
-            print('\nTOP %d-L words:  %s' % (len(word), g_TOP_WORDS[len(word)]))
-            prev_word_len = len(word)
-
-        percent = (float(count)/len(words))*100
-        print("{0}: {1:.2f}% ({2} times)".format(word, percent, count))
+    for reference_word_length, message in g_TOP_WORDS:
+        print('-'*50)
+        print('\nTOP %d-L words:  %s' % (reference_word_length, message))
+        for word, word_count in most_common:
+            if len(word) != reference_word_length:
+                continue
+            percent = (float(word_count)/len(words))*100
+            print("{0}: {1:.2f}% ({2} times)".format(word, percent, word_count))
 
     return most_common
 
@@ -186,8 +185,7 @@ def main():
     print_letters_stats2(data, 2)
     # print_letters_stats2(data, 3)
 
-    COUNT_SAME = True
-    print_letters_stats2(data, 2, COUNT_SAME)
+    print_letters_stats2(data, 2, count_same_letters=True)
 
 
 if __name__ == '__main__':
