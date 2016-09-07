@@ -17,7 +17,7 @@ g_SEP = '-'*100
 g_TOP_LETTERS  = 'E T A O I N S H R D L U'
 
 g_TOP_WORDS = [
-      (1, 'a')
+      (1, 'a I')
     , (2, 'of to in it is be as at so we he by or on do')
     , (3, 'the and for are but not you all')
     , (4, 'that with from this')
@@ -85,7 +85,6 @@ def print_letters_stats(data):
           (' '.join(without_punct), len(without_punct)))
     print(g_SEP)
 
-    # print percents
     print('\n\t\tLETTERS DISTRIBUTION: \n')
     print('Most frequent letters: ' + g_TOP_LETTERS + '\n')
 
@@ -127,7 +126,7 @@ def print_words_stats(data):
     return most_common
 
 
-def print_letters_stats2(data, letters_count, count_same_letters=False):
+def print_letters_analysis(data, letters_count, count_same_letters=False):
     '''
         Prints 10 most frequent sequences of letters of
         *letters_count* length
@@ -182,10 +181,10 @@ def main():
     print_letters_stats(data)
     print_words_stats(data)
 
-    print_letters_stats2(data, 2)
-    # print_letters_stats2(data, 3)
+    print_letters_analysis(data, letters_count=2)
+    # print_letters_analysis(data, letters_count3)
 
-    print_letters_stats2(data, 2, count_same_letters=True)
+    print_letters_analysis(data, letters_count=2, count_same_letters=True)
 
 
 if __name__ == '__main__':
