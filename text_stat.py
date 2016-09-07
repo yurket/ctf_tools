@@ -6,7 +6,7 @@ from __future__ import print_function
 import argparse
 import os
 import string
-import sys        # for version_info
+import sys
 
 from collections import Counter, OrderedDict
 
@@ -24,15 +24,17 @@ g_TOP_WORDS = [
     ]
 
 g_LETTER_FREQ_STAT = {
-    (2, False): 'Top digraphs: th er on an re he in ed nd ha at en es of \n'
+      (2, False): 'Top digraphs: th er on an re he in ed nd ha at en es of \n'
     , (2, True): 'Top doubles: ss ee tt ff ll mm oo \n'
 }
 
-def IS_PYTHON2():
-    return True if sys.version_info.major == 2 else False
+
+def IS_PYTHON3():
+    return sys.version_info.major == 3
+
 
 def replace_not_printable_with_hex(ch):
-    if chr(ch) not in string.printable:
+    if ch not in string.printable:
         return '{:02x}'.format(ch)
     if ch == ord('\n'):
         return '\\n'
@@ -44,7 +46,7 @@ def replace_not_printable_with_hex(ch):
         return '\\c'
     elif ch == ord('\r'):
         return '\\r'
-    return chr(ch)
+    return ch
 
 
 def print_letters_stats(data):
@@ -59,22 +61,15 @@ def print_letters_stats(data):
     print(g_SEP)
     print()
 
-    # in Python2 ctr.keys() returns the list of strings
-    # in Python3 ctr.keys() returns the list of ints
-    if IS_PYTHON2():
-        keys = sorted([ord(x) for x in ctr.keys()])
-        most_common = [ (ord(ch),count) for ch, count in ctr.most_common()]
-    else:
-        keys = sorted(ctr.keys())
-        most_common = ctr.most_common()
+    keys = sorted(ctr.keys())
+    most_common = ctr.most_common()
 
-    all_alphabet = [ replace_not_printable_with_hex(k) for k in  keys ]
+    all_alphabet = [ replace_not_printable_with_hex(k) for k in keys ]
     all_alphabet = (' '.join(all_alphabet))
     print('All alphabet is: %s     (Lengh: %d)' % (all_alphabet, len(keys)))
     print(g_SEP)
 
-    without_whitespaces = [k for k in keys if chr(k) not in string.whitespace]
-    # without_whitespaces = map(replace_not_printable_with_hex, without_whitespaces)
+    without_whitespaces = [k for k in keys if k not in string.whitespace]
     without_whitespaces = [replace_not_printable_with_hex(c) for c in without_whitespaces]
     print('Without whitespaces: %s     (Lengh: %d)' %
           (' '.join(without_whitespaces), len(without_whitespaces)))
@@ -153,7 +148,7 @@ def print_letters_analysis(data, letters_count, count_same_letters=False):
     sorted_letters_map = OrderedDict(
         sorted(letters_map.items(), key=lambda x: x[1], reverse=True))
 
-    for letters, count in sorted_letters_map.items()[:10]:
+    for letters, count in list(sorted_letters_map.items())[:10]:
         escaped_letters = ''.join(map(replace_not_printable_with_hex, letters))
         print(escaped_letters, count)
 
@@ -178,11 +173,14 @@ def main():
         print(e.message)
         return
 
+    if IS_PYTHON3():
+        data = data.decode()
+
     print_letters_stats(data)
+
     print_words_stats(data)
 
     print_letters_analysis(data, letters_count=2)
-    # print_letters_analysis(data, letters_count3)
 
     print_letters_analysis(data, letters_count=2, count_same_letters=True)
 
