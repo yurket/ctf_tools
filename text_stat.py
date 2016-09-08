@@ -155,6 +155,22 @@ def print_letters_analysis(data, letters_count, count_same_letters=False):
     return sorted_letters_map
 
 
+def print_most_common_first_letter(data):
+    print(g_SEP)
+    print('\n\t\tMOST COMMON FIRST LETTERS: \n')
+    print('\nTOP first letters:  t o a w ...')
+    print()
+
+    first_letters = [word[0] for word in data.split()]
+    ctr = Counter(first_letters)
+
+    for char, count in ctr.most_common()[:4]:
+        percent = (float(count)/len(first_letters))*100
+
+        char = replace_not_printable_with_hex(char)
+        print("{0}: {1:.2f}% ({2} times)".format(char, percent, count))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('filename')
@@ -184,6 +200,7 @@ def main():
 
     print_letters_analysis(data, letters_count=2, count_same_letters=True)
 
+    print_most_common_first_letter(data)
 
 if __name__ == '__main__':
     main()
