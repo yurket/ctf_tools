@@ -8,7 +8,7 @@ import stat
 
 
 PYTHON_TEMPLATE = \
-u"""#!/usr/bin/env python
+u"""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
