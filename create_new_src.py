@@ -12,15 +12,14 @@ u"""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+import unittest
 
-
-
-def main():
-    pass
-
+class MyTest(unittest.TestCase):
+    def test_first(self):
+        self.assertEqual(1,1)
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
 
 """
 
@@ -113,7 +112,7 @@ def main():
     filename = args.filename
     force_replace = args.force
 
-    name, ext = os.path.splitext(filename)
+    _, ext = os.path.splitext(filename)
     if not ext or ext not in _EXT_TO_TEMPLATE.keys():
         print("%sError: Wrong extension! Specify one of the supported: %s %s" %
               (COLORS.RED, _EXT_TO_TEMPLATE.keys(), COLORS.NOCOLOR))
