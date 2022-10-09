@@ -73,7 +73,7 @@ project({project_name})
 
 add_executable({project_name} {project_name}.cpp)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 """
 
