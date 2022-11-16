@@ -68,12 +68,12 @@ BASH_TEMPLATE = """#!/bin/bash
 echo template
 """
 
-CMAKE_TEMPLATE = """cmake_minimum_required(VERSION 3.10)
+CMAKE_TEMPLATE = """cmake_minimum_required(VERSION 3.14)
 project({project_name})
 
-add_executable({project_name} {project_name}.cpp)
+add_executable({project_name} {cpp_filename})
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 """
 
@@ -113,19 +113,15 @@ def exit_if_exists(filename: str):
         exit(1)
 
 
-def create_cmake_project(project_name: str, force_replace: bool):
+def add_CMakeLists(project_name: str, cpp_filename: str, force_replace: bool):
     cmake_filename = "CMakeLists.txt"
-    cpp_filename = project_name + ".cpp"
     if not force_replace:
         exit_if_exists(cmake_filename)
-        exit_if_exists(cpp_filename)
 
     with open(cmake_filename, "wb") as f:
-        template = CMAKE_TEMPLATE.format(project_name=project_name).encode("utf-8")
-        f.write(template)
-
-    with open(cpp_filename, "wb") as f:
-        template = CPP_TEMPLATE.encode("utf-8")
+        template = CMAKE_TEMPLATE.format(
+            project_name=project_name, cpp_filename=cpp_filename
+        ).encode("utf-8")
         f.write(template)
 
 
@@ -141,15 +137,18 @@ def main():
     parser.add_argument(
         "-f", "--force", action="store_true", help="replace existing file"
     )
-    parser.add_argument("--project-name", help="project name for CMakeLists.txt")
+    parser.add_argument(
+        "-cm",
+        "--cmake-project-name",
+        help="additionally creates CMakeLists.txt with filled in project_name",
+    )
     args = parser.parse_args()
     filename = args.filename
-    project_name = args.project_name if args.project_name else "template"
+    project_name = args.cmake_project_name
     force_replace = args.force
 
-    if filename == "CMakeLists.txt":
-        create_cmake_project(project_name, force_replace)
-        return
+    if project_name:
+        add_CMakeLists(project_name, filename, force_replace)
 
     _, ext = os.path.splitext(filename)
     if not ext or ext not in _EXT_TO_TEMPLATE.keys():
