@@ -77,6 +77,20 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 """
 
+CLANG_FORMAT = """# https://clang-format-configurator.site/
+---
+BraceWrapping: {}
+ColumnLimit: 100
+IndentWidth: 4
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlignArrayOfStructures: Left
+"""
+
 
 _EXT_TO_TEMPLATE = {
     ".py": PYTHON_TEMPLATE,
@@ -125,6 +139,15 @@ def add_CMakeLists(project_name: str, cpp_filename: str, force_replace: bool):
         f.write(template)
 
 
+def add_clang_format(force_replace: bool):
+    clang_format_filename = ".clang-format"
+    if not force_replace:
+        exit_if_exists(clang_format_filename)
+
+    with open(clang_format_filename, "wb") as f:
+        f.write(CLANG_FORMAT.encode("utf-8"))
+
+
 def main():
     DESCR = (
         "Program creates ready-to-use source file templates for some"
@@ -144,11 +167,12 @@ def main():
     )
     args = parser.parse_args()
     filename = args.filename
-    project_name = args.cmake_project_name
+    cmake_project_name = args.cmake_project_name
     force_replace = args.force
 
-    if project_name:
-        add_CMakeLists(project_name, filename, force_replace)
+    if cmake_project_name:
+        add_CMakeLists(cmake_project_name, filename, force_replace)
+        add_clang_format(force_replace)
 
     _, ext = os.path.splitext(filename)
     if not ext or ext not in _EXT_TO_TEMPLATE.keys():
