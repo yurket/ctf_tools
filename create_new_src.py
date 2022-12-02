@@ -71,10 +71,10 @@ echo template
 CMAKE_TEMPLATE = """cmake_minimum_required(VERSION 3.14)
 project({project_name})
 
-add_executable({project_name} {cpp_filename})
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+add_executable({project_name} {cpp_filename})
 """
 
 CLANG_FORMAT = """# https://clang-format-configurator.site/
